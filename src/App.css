@@ -2,13 +2,15 @@
   font-family: Arial, Helvetica, sans-serif;
 }
 
-h1 {
-  text-align: left;
-  margin-left: 2%;
-}
-
 .topbar {
   display: flex;
   justify-content: flex-start;
   text-align: center;
+}
+
+.nappulat {
+  display: flex;
+  justify-content: center;
+  margin: 7px 5px 7px;
+  text-align: left;
 }
