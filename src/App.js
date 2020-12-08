@@ -1,23 +1,36 @@
-import logo from './logo.svg';
 import './App.css';
+import Appbar from '@material-ui/core/AppBar'
+import {BrowserRouter as Router,
+Switch,
+Route,
+Link
+} from 'react-router-dom'
+import Home from './components/Home';
+import Customerlist from './components/Customerlist';
+import Trainings from './components/Trainings';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <Router>
+      <div className="topbar">
+        <Appbar color="default" position="sticky">
+      <h1>Personal rainer</h1>
+      <Link to='/'>Home</Link>{' '}
+      <Link to='/customerlist'>Customers</Link> {' '}
+      <Link to='/trainings'>Trainings</Link> {' '}
+     
+      </Appbar>
+      </div>
+      <div>
+      <Switch>
+        <Route exact path="/" component={Home} />
+        <Route path="/customerlist" component={Customerlist} />
+        <Route path="/trainings" component={Trainings} />
+        <Route render={() => <h1>Page not found</h1>} />
+      </Switch>
+      </div>
+      </Router>
     </div>
   );
 }
