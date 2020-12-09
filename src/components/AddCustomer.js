@@ -20,7 +20,6 @@ function AddCustomer(props) {
     email: "",
     phone: "",
   });
-  console.log(customer);
 
   const handleClickOpen = () => {
     setOpen(true);
