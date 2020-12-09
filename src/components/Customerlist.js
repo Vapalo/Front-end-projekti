@@ -5,6 +5,7 @@ import { useConfirm } from "material-ui-confirm";
 import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-alpine-dark.css";
 import EditCustomer from "./EditCustomer";
+import AddCustomer from "./AddCustomer";
 
 function Customerlist() {
   const [customer, setCustomer] = useState([]);
@@ -86,16 +87,22 @@ function Customerlist() {
       .catch((error) => console.log(error));
   };
 
+  const saveCustomer = (newCustomer) => {
+    fetch(custUrl, {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify(newCustomer),
+    })
+      .then((res) => getCustomers())
+      .catch((err) => console.error(err));
+  };
+
   return (
     <div>
       <div className="nappulat">
-        <Button
-          style={{ margin: "5px", opacity: "90%" }}
-          variant="contained"
-          color="primary"
-        >
-          Add a customer
-        </Button>
+        <AddCustomer saveCustomer={saveCustomer} />
         <EditCustomer gridRef={gridRef} modifyCustomer={modifyCustomer} />
         <Button
           onClick={deleteClick}
