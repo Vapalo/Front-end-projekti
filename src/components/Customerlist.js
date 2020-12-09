@@ -4,6 +4,7 @@ import Button from "@material-ui/core/Button";
 import { useConfirm } from "material-ui-confirm";
 import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-alpine-dark.css";
+import EditCustomer from "./EditCustomer";
 
 function Customerlist() {
   const [customer, setCustomer] = useState([]);
@@ -16,7 +17,6 @@ function Customerlist() {
     fetch(custUrl)
       .then((res) => res.json())
       .then((data) => setCustomer(data.content));
-    console.log(customer);
   };
 
   const onGridReady = (params) => {
@@ -74,18 +74,32 @@ function Customerlist() {
     }
   };
 
+  const modifyCustomer = (customer, link) => {
+    fetch(link, {
+      method: "PUT",
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify(customer),
+    })
+      .then((res) => getCustomers())
+      .catch((error) => console.log(error));
+  };
+
   return (
     <div>
       <div className="nappulat">
-        <Button style={{ margin: "5px" }} variant="contained" color="primary">
+        <Button
+          style={{ margin: "5px", opacity: "90%" }}
+          variant="contained"
+          color="primary"
+        >
           Add a customer
         </Button>
-        <Button style={{ margin: "5px" }} variant="contained" color="primary">
-          Edit selected customer
-        </Button>
+        <EditCustomer gridRef={gridRef} modifyCustomer={modifyCustomer} />
         <Button
           onClick={deleteClick}
-          style={{ margin: "5px" }}
+          style={{ margin: "5px", opacity: "90%" }}
           variant="contained"
           color="secondary"
         >
@@ -95,7 +109,12 @@ function Customerlist() {
 
       <div
         className="ag-theme-alpine-dark"
-        style={{ height: "400px", width: "50%", margin: "auto" }}
+        style={{
+          height: "400px",
+          width: "50%",
+          margin: "auto",
+          opacity: "90%",
+        }}
       >
         <AgGridReact
           ref={gridRef}

@@ -60,20 +60,37 @@ function Trainings() {
   return (
     <div>
       <div className="nappulat">
-        <Button style={{ margin: "5px" }} variant="contained" color="primary">
+        <Button
+          style={{ margin: "5px", opacity: "90%" }}
+          variant="contained"
+          color="primary"
+        >
           Add a excercise
         </Button>
-        <Button style={{ margin: "5px" }} variant="contained" color="primary">
+        <Button
+          style={{ margin: "5px", opacity: "90%" }}
+          variant="contained"
+          color="primary"
+        >
           Edit selected excercise
         </Button>
-        <Button style={{ margin: "5px" }} variant="contained" color="secondary">
+        <Button
+          style={{ margin: "5px", opacity: "90%" }}
+          variant="contained"
+          color="secondary"
+        >
           Delete selected excercise
         </Button>
       </div>
 
       <div
         className="ag-theme-alpine-dark"
-        style={{ height: "400px", width: "50%", margin: "auto" }}
+        style={{
+          height: "400px",
+          width: "50%",
+          margin: "auto",
+          opacity: "90%",
+        }}
       >
         <AgGridReact
           animateRows={true}
