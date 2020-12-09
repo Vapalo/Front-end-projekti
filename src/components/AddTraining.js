@@ -11,13 +11,10 @@ import { DatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 import MomentUtils from "@date-io/moment";
 import moment from "moment";
 
-function EditTraining(props) {
+function AddTraining(props) {
   const [open, setOpen] = useState(false);
   const confirm = useConfirm();
-  const [text, setText] = useState({
-    activity: "",
-    id: "",
-  });
+  const [text, setText] = useState("");
   const [date, setDate] = useState(new Date());
   const [training, setTraining] = useState([
     {
@@ -27,17 +24,8 @@ function EditTraining(props) {
   ]);
 
   const handleClickOpen = () => {
-    if (props.gridRef.current.getSelectedNodes().length > 0) {
-      let data = props.gridRef.current.getSelectedNodes()[0].data;
-      console.log(data);
-      setOpen(true);
-
-      setText({ activity: data.activity, id: data.id });
-
-      setDate(moment(data.date, "DD.MM.YYYY"));
-    } else {
-      alert("please select an excercise first");
-    }
+    setOpen(true);
+    setText("");
   };
 
   const handleClose = () => {
@@ -47,6 +35,7 @@ function EditTraining(props) {
   const handleText = (event) => {
     event.preventDefault();
     setText(event.target.value);
+    console.log(text);
   };
 
   const handleDate = (date) => {
@@ -55,24 +44,26 @@ function EditTraining(props) {
 
   const handleClick = () => {
     setTraining({
-      activity: text.activity,
+      activity: text,
       date: moment(date).toISOString(),
-      id: text.id,
     });
 
-    editTraining();
+    saveTraining();
   };
-  const editTraining = () => {
+
+  const saveTraining = () => {
     confirm({
-      description: `Save edits to ${text.activity} ${moment(date).format(
+      description: `Add ${training.activity} ${moment(date).format(
         "DD.MM.YYYY"
-      )}?`,
+      )} to the list?`,
     })
       .then(() => {
-        let link = props.gridRef.current.getSelectedNodes()[0].data.links[0]
-          .href;
-        props.modifyTraining(training, link);
+        props.saveCustomer(training);
         setOpen(false);
+        setTraining({
+          activity: "",
+          date: "",
+        });
       })
       .catch(() => console.log("Edit was cancelled"));
   };
@@ -85,14 +76,14 @@ function EditTraining(props) {
         color="primary"
         onClick={handleClickOpen}
       >
-        Edit selected excercise
+        Add a new excercise
       </Button>
       <Dialog
         open={open}
         onClose={handleClose}
         aria-labelledby="form-dialog-title"
       >
-        <DialogTitle id="form-dialog-title">Edit an excercise</DialogTitle>
+        <DialogTitle id="form-dialog-title">Add a new excercise</DialogTitle>
         <DialogContent>
           <DialogContentText>
             Please enter the following information
@@ -103,7 +94,7 @@ function EditTraining(props) {
             id="activity"
             label="Activity"
             name="activity"
-            value={text.activity}
+            value={text}
             required
             onChange={(event) => handleText(event)}
           />
@@ -131,5 +122,4 @@ function EditTraining(props) {
     </div>
   );
 }
-
-export default EditTraining;
+export default AddTraining;

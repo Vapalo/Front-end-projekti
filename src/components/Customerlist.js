@@ -61,7 +61,6 @@ function Customerlist() {
   const deleteClick = () => {
     if (gridRef.current.getSelectedNodes().length > 0) {
       let selected = gridRef.current.getSelectedNodes()[0].data;
-      console.log(selected);
 
       confirm({
         description: `Are you sure you want to delete ${selected.firstname}?`,

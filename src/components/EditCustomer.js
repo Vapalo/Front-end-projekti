@@ -20,7 +20,6 @@ function EditCustomer(props) {
     email: "",
     phone: "",
   });
-  console.log(customer);
 
   const handleClickOpen = () => {
     if (props.gridRef.current.getSelectedNodes().length > 0) {

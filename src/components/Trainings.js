@@ -5,6 +5,7 @@ import moment from "moment";
 import "moment/locale/fi";
 import { useConfirm } from "material-ui-confirm";
 import EditTraining from "./EditTraining";
+import AddTraining from "./AddTraining";
 
 const columns = [
   {
@@ -17,6 +18,14 @@ const columns = [
   {
     headerName: "Date",
     field: "date",
+    filter: true,
+    sortable: true,
+    floatingFilter: true,
+  },
+
+  {
+    headerName: "Customer",
+    field: "firstname",
     filter: true,
     sortable: true,
     floatingFilter: true,
@@ -44,6 +53,7 @@ function Trainings() {
             return {
               activity: item.activity,
               date: moment(item.date).format("DD.MM.YYYY"),
+              firstname: item.customer.firstname + " " + item.customer.lastname,
               id: item.id,
             };
           })
@@ -66,7 +76,6 @@ function Trainings() {
   const deleteTraining = () => {
     if (gridRef.current.getSelectedNodes().length > 0) {
       let selected = gridRef.current.getSelectedNodes()[0].data;
-      console.log(selected);
 
       confirm({
         description: `Are you sure you want to delete ${selected.activity}?`,
@@ -80,16 +89,14 @@ function Trainings() {
     }
   };
 
+  const saveTraining = (newTraining) => {
+    console.log(newTraining);
+  };
+
   return (
     <div>
       <div className="nappulat">
-        <Button
-          style={{ margin: "5px", opacity: "90%" }}
-          variant="contained"
-          color="primary"
-        >
-          Add a excercise
-        </Button>
+        <AddTraining saveTraining={saveTraining} />
         <EditTraining gridRef={gridRef} />
         <Button
           style={{ margin: "5px", opacity: "90%" }}
