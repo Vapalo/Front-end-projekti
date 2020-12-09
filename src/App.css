@@ -18,4 +18,14 @@
 .kotiotsikko {
   display: flex;
   justify-content: center;
+  color: #bb86fc;
+  opacity: 90%;
+}
+
+body {
+  background-color: #121212;
+}
+
+.Tab {
+  cursor: pointer;
 }

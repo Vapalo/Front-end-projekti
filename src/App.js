@@ -20,6 +20,9 @@ const useStyles = makeStyles({
     width: 135,
     height: 40,
   },
+  bar: {
+    backgroundColor: "grey",
+  },
 });
 
 function App() {
@@ -29,7 +32,7 @@ function App() {
   return (
     <div>
       <nav className={classes.root}>
-        <AppBar position="static" color="default">
+        <AppBar position="sticky" color="inherit" className={classes.bar}>
           <Toolbar>
             <Grid justify={"space-between"} container>
               <Grid xs={1} item>
