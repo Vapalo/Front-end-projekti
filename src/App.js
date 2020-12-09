@@ -11,6 +11,7 @@ import React, { useState } from "react";
 import Customerlist from "./components/Customerlist";
 import Trainings from "./components/Trainings";
 import Home from "./components/Home";
+import { ConfirmProvider } from "material-ui-confirm";
 
 const useStyles = makeStyles({
   root: {
@@ -57,9 +58,11 @@ function App() {
             </Grid>
           </Toolbar>
         </AppBar>
-        {value === "one" && <Home />}
-        {value === "two" && <Customerlist />}
-        {value === "three" && <Trainings />}
+        <ConfirmProvider>
+          {value === "one" && <Home />}
+          {value === "two" && <Customerlist />}
+          {value === "three" && <Trainings />}
+        </ConfirmProvider>
       </nav>
     </div>
   );
