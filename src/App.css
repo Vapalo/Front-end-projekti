@@ -14,3 +14,8 @@
   margin: 7px 5px 7px;
   text-align: left;
 }
+
+.kotiotsikko {
+  display: flex;
+  justify-content: center;
+}

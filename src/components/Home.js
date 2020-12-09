@@ -1,11 +1,11 @@
-import React from 'react'
+import React from "react";
 
 function Home() {
-    return (
-        <div>
-            <h1>Tämä on kotisivu</h1>
-        </div>
-    )
+  return (
+    <div className="kotiotsikko">
+      <h1>Tervetuloa Personal Trainer sivustolle!</h1>
+    </div>
+  );
 }
 
-export default Home
+export default Home;
