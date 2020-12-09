@@ -76,7 +76,6 @@ function AddCustomer(props) {
             Please enter the following information
           </DialogContentText>
           <TextField
-            color="white"
             autoFocus
             margin="dense"
             id="firstname"

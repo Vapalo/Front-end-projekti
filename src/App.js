@@ -33,7 +33,7 @@ function App() {
   return (
     <div>
       <nav className={classes.root}>
-        <AppBar position="sticky" color="inherit" className={classes.bar}>
+        <AppBar position="sticky" color="primary" className={classes.bar}>
           <Toolbar>
             <Grid justify={"space-between"} container>
               <Grid xs={1} item>

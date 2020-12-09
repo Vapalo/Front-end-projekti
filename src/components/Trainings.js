@@ -1,61 +1,84 @@
 import { Button } from "@material-ui/core";
 import { AgGridReact } from "ag-grid-react/lib/agGridReact";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import moment from "moment";
 import "moment/locale/fi";
+import { useConfirm } from "material-ui-confirm";
+import EditTraining from "./EditTraining";
+
+const columns = [
+  {
+    headerName: "Activity",
+    field: "activity",
+    filter: true,
+    sortable: true,
+    floatingFilter: true,
+  },
+  {
+    headerName: "Date",
+    field: "date",
+    filter: true,
+    sortable: true,
+    floatingFilter: true,
+  },
+];
 
 function Trainings() {
+  const gridRef = useRef();
   const [training, setTraining] = useState([]);
+  const confirm = useConfirm();
 
-  const trainUrl = "https://customerrest.herokuapp.com/api/trainings";
-  const [gridApi, setGridApi] = useState(null);
+  const trainUrl = "https://customerrest.herokuapp.com/gettrainings";
 
   const onGridReady = (params) => {
-    setGridApi(params.api);
-
+    gridRef.current = params.api;
     params.api.sizeColumnsToFit();
   };
 
-  useEffect(() => {
-    async function getTrainings() {
-      try {
-        const response = await fetch(trainUrl);
-        const json = await response.json();
-        console.log(json);
+  const getTrainings = () => {
+    fetch(trainUrl)
+      .then((response) => response.json())
+      .then((data) =>
         setTraining(
-          json.content.map((item) => {
+          data.map((item) => {
             return {
               activity: item.activity,
               date: moment(item.date).format("DD.MM.YYYY"),
-              link: item.links.self,
+              id: item.id,
             };
           })
-        );
-      } catch (error) {
-        console.log(error);
-      }
-    }
+        )
+      );
+  };
+
+  useEffect(() => {
     getTrainings();
   }, []);
 
-  const columns = [
-    {
-      headerName: "Activity",
-      field: "activity",
-      filter: true,
-      sortable: true,
-      floatingFilter: true,
-    },
-    {
-      headerName: "Date",
-      field: "date",
-      filter: true,
-      sortable: true,
-      floatingFilter: true,
-    },
-  ];
+  const deleteFunction = (id) => {
+    fetch(`https://customerrest.herokuapp.com/api/trainings/${id}`, {
+      method: "DELETE",
+    })
+      .then((res) => getTrainings())
+      .catch((error) => console.error(error));
+  };
 
-  moment(training.date).format("DD.MM.YYYY");
+  const deleteTraining = () => {
+    if (gridRef.current.getSelectedNodes().length > 0) {
+      let selected = gridRef.current.getSelectedNodes()[0].data;
+      console.log(selected);
+
+      confirm({
+        description: `Are you sure you want to delete ${selected.activity}?`,
+      })
+        .then(() => {
+          deleteFunction(selected.id);
+        })
+        .catch(() => console.log("Delete was cancelled"));
+    } else {
+      alert("Please select an excercise first");
+    }
+  };
 
   return (
     <div>
@@ -67,17 +90,12 @@ function Trainings() {
         >
           Add a excercise
         </Button>
-        <Button
-          style={{ margin: "5px", opacity: "90%" }}
-          variant="contained"
-          color="primary"
-        >
-          Edit selected excercise
-        </Button>
+        <EditTraining gridRef={gridRef} />
         <Button
           style={{ margin: "5px", opacity: "90%" }}
           variant="contained"
           color="secondary"
+          onClick={deleteTraining}
         >
           Delete selected excercise
         </Button>
