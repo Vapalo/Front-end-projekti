@@ -4,7 +4,6 @@ import React, { useEffect, useRef, useState } from "react";
 import moment from "moment";
 import "moment/locale/fi";
 import { useConfirm } from "material-ui-confirm";
-import EditTraining from "./EditTraining";
 import AddTraining from "./AddTraining";
 
 const columns = [
@@ -89,15 +88,27 @@ function Trainings() {
     }
   };
 
-  const saveTraining = (newTraining) => {
-    console.log(newTraining);
+  const saveTraining = (text, date, id, duration) => {
+    const parsedDuration = parseInt(duration);
+    fetch(`https://customerrest.herokuapp.com/api/trainings`, {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify({
+        date: date,
+        activity: text,
+        duration: parsedDuration,
+        customer: `https://customerrest.herokuapp.com/api/customers/${id}`,
+      }),
+    }).then((res) => getTrainings());
   };
 
   return (
     <div>
       <div className="nappulat">
         <AddTraining saveTraining={saveTraining} />
-        <EditTraining gridRef={gridRef} />
+
         <Button
           style={{ margin: "5px", opacity: "90%" }}
           variant="contained"

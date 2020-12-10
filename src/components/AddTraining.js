@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import TextField from "@material-ui/core/TextField";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -10,18 +10,32 @@ import { useConfirm } from "material-ui-confirm";
 import { DatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 import MomentUtils from "@date-io/moment";
 import moment from "moment";
+import {
+  FormControl,
+  Input,
+  InputLabel,
+  makeStyles,
+  MenuItem,
+  Select,
+} from "@material-ui/core";
+
+const useStyles = makeStyles((theme) => ({
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 120,
+    maxWidth: 300,
+  },
+}));
 
 function AddTraining(props) {
+  const classes = useStyles();
   const [open, setOpen] = useState(false);
   const confirm = useConfirm();
   const [text, setText] = useState("");
   const [date, setDate] = useState(new Date());
-  const [training, setTraining] = useState([
-    {
-      activity: "",
-      date: "",
-    },
-  ]);
+  const [customers, setCustomers] = useState([]);
+  const [customerid, setCustomerid] = useState("");
+  const [duration, setDuration] = useState("");
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -43,29 +57,49 @@ function AddTraining(props) {
   };
 
   const handleClick = () => {
-    setTraining({
-      activity: text,
-      date: moment(date).toISOString(),
-    });
-
     saveTraining();
   };
 
   const saveTraining = () => {
     confirm({
-      description: `Add ${training.activity} ${moment(date).format(
+      description: `Add ${text} ${moment(date).format(
         "DD.MM.YYYY"
       )} to the list?`,
     })
       .then(() => {
-        props.saveCustomer(training);
+        props.saveTraining(
+          text,
+          moment(date).toISOString(),
+          customerid,
+          duration
+        );
         setOpen(false);
-        setTraining({
-          activity: "",
-          date: "",
-        });
+        setText("");
+        setDate(new Date());
+        setCustomerid("");
+        setDuration("");
       })
       .catch(() => console.log("Edit was cancelled"));
+  };
+
+  const getCustomers = () => {
+    fetch("https://customerrest.herokuapp.com/getcustomers")
+      .then((response) => response.json())
+      .then((data) => setCustomers(data));
+  };
+
+  useEffect(() => {
+    getCustomers();
+  }, []);
+
+  const handleID = (event) => {
+    event.preventDefault();
+    setCustomerid(event.target.value);
+  };
+
+  const handleDuration = (event) => {
+    event.preventDefault();
+    setDuration(event.target.value);
   };
 
   return (
@@ -98,6 +132,15 @@ function AddTraining(props) {
             required
             onChange={(event) => handleText(event)}
           />
+          <TextField
+            margin="dense"
+            id="duration"
+            label="Duration"
+            name="duration"
+            value={duration}
+            required
+            onChange={(event) => handleDuration(event)}
+          />
           <MuiPickersUtilsProvider utils={MomentUtils}>
             <DatePicker
               id="paiva"
@@ -108,6 +151,23 @@ function AddTraining(props) {
               onChange={(date) => handleDate(date)}
             />
           </MuiPickersUtilsProvider>
+          <FormControl className={classes.formControl}>
+            <InputLabel id="demo-mutiple-name-label">Name</InputLabel>
+            <Select
+              labelId="demo-mutiple-name-label"
+              id="demo-mutiple-name"
+              single
+              value={customerid}
+              onChange={(event) => handleID(event)}
+              input={<Input />}
+            >
+              {customers.map((customer) => (
+                <MenuItem key={customer.id} value={customer.id}>
+                  {customer.firstname + " " + customer.lastname}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
         </DialogContent>
 
         <DialogActions>
