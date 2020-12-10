@@ -9,7 +9,7 @@ import AddCustomer from "./AddCustomer";
 
 function Customerlist() {
   const [customer, setCustomer] = useState([]);
-  const [gridApi, setGridApi] = useState(null);
+
   const gridRef = useRef();
   const confirm = useConfirm();
   const custUrl = "https://customerrest.herokuapp.com/api/customers";
@@ -21,7 +21,6 @@ function Customerlist() {
   };
 
   const onGridReady = (params) => {
-    setGridApi(params.api);
     gridRef.current = params.api;
     params.api.sizeColumnsToFit();
   };

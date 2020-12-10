@@ -5,6 +5,10 @@ import moment from "moment";
 import "moment/locale/fi";
 import { useConfirm } from "material-ui-confirm";
 import AddTraining from "./AddTraining";
+import FullCalendar from "@fullcalendar/react";
+import DayGridPlugin from "@fullcalendar/daygrid";
+import timeGridPlugin from "@fullcalendar/timegrid";
+import fiLocale from "@fullcalendar/core/locales/fi";
 
 const columns = [
   {
@@ -35,6 +39,7 @@ function Trainings() {
   const gridRef = useRef();
   const [training, setTraining] = useState([]);
   const confirm = useConfirm();
+  const [calendar, setCalendar] = useState([]);
 
   const trainUrl = "https://customerrest.herokuapp.com/gettrainings";
 
@@ -63,6 +68,22 @@ function Trainings() {
   useEffect(() => {
     getTrainings();
   }, []);
+
+  const kalenteri = (training) => {
+    setCalendar(
+      training.map((training) => {
+        return {
+          title: training.activity + " / " + training.firstname,
+
+          date: moment(training.date, "DD.MM.YYYY").format("YYYY-MM-DD"),
+        };
+      })
+    );
+  };
+
+  useEffect(() => {
+    kalenteri(training);
+  }, [training]);
 
   const deleteFunction = (id) => {
     fetch(`https://customerrest.herokuapp.com/api/trainings/${id}`, {
@@ -136,6 +157,20 @@ function Trainings() {
           rowData={training}
           onGridReady={onGridReady}
         ></AgGridReact>
+      </div>
+
+      <div className="kalenteri">
+        <FullCalendar
+          plugins={[DayGridPlugin, timeGridPlugin]}
+          initialView="dayGridMonth"
+          weekends={true}
+          events={calendar}
+          showNonCurrentDates={false}
+          locale={fiLocale}
+          headerToolbar={{
+            center: "dayGridMonth,timeGridWeek,timeGridDay",
+          }}
+        />
       </div>
     </div>
   );

@@ -29,3 +29,12 @@ body {
 .Tab {
   cursor: pointer;
 }
+.kalenteri {
+  margin: 5%;
+  background-color: darkgrey;
+  padding: 5px;
+}
+
+.fc {
+  background-color: darkgrey;
+}
